@@ -3,6 +3,11 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 -- set termguicolors to enable highlight groups
 vim.opt.termguicolors = true
+-- basic settings
+vim.bo.expandtab = true
+vim.o.tabstop = 4
+vim.bo.tabstop = 4
+vim.bo.softtabstop = 4
 -- set nu
 vim.cmd([[set nu]])
 -- custom keymap -- map CTRL + s to save without quit
@@ -91,8 +96,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     end,
     group = format_sync_grp,
 })
--- basic settings
-require('basic')
 
 -- auto completion
 require('nvim-cmp')
