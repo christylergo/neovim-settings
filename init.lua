@@ -4,10 +4,19 @@ vim.g.loaded_netrwPlugin = 1
 -- set termguicolors to enable highlight groups
 vim.opt.termguicolors = true
 -- basic settings
+vim.o.expandtab = true
 vim.bo.expandtab = true
 vim.o.tabstop = 4
-vim.bo.tabstop = 4
+vim.bo.tabstop = 4 
 vim.bo.softtabstop = 4
+vim.o.shiftround = true
+vim.o.shiftwidth = 4
+vim.bo.shiftwidth = 4
+-- 新行对齐当前行
+vim.o.autoindent = true
+vim.bo.autoindent = true
+vim.o.smartindent = true
+vim.bo.smartindent = true
 -- set nu
 vim.cmd([[set nu]])
 -- custom keymap -- map CTRL + s to save without quit
@@ -26,6 +35,17 @@ local set = vim.keymap.set -- equivalent to map
 set("n","tt", ":NvimTreeToggle<CR>", opts)
 -- exit from terminal mode,the default keygroup is so weird,have to be changed!
 set("t","<Esc>","<C-\\><C-n>",opts)
+-- scroll settings
+set("n", "<C-u>", "9k", opts)
+set("n", "<C-d>", "9j", opts)
+set("i", "<C-u>", "<Esc>6ki", opts)
+set("i", "<C-d>", "<Esc>6ji", opts)
+-- just move cursor foward
+set("i","<C-l>","<Right>",opts)
+-- quit without save
+set("n","QQ",":q!<CR>",opts)
+-- 光标以上和以下保持的最小屏幕行数
+vim.opt.scrolloff = 5
 
 
 -- lazy setup -- add lazypath to the runtimepath
@@ -34,6 +54,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     { "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...},
+    { "tanvirtin/monokai.nvim",opts = {} },
     {
 		"nvim-tree/nvim-tree.lua",
 		version = "*",
@@ -42,45 +63,53 @@ require("lazy").setup({
 		config = function()
 			require("nvim-tree").setup ({})
 		end,
-    },
+        },
     {
         "neovim/nvim-lspconfig",
 		config = function()
 			-- Configuration for nvim-lspconfig
 			require("lspconfig").gopls.setup({})
 		end,
-    },
+        },
     {
         "ray-x/go.nvim",
 		dependencies = {  -- optional packages
 		"ray-x/guihua.lua",
 		"neovim/nvim-lspconfig",
 		"nvim-treesitter/nvim-treesitter",
-		},
+		        },
 		config = function()
 			require("go").setup()
 		end,
 		event = {"CmdlineEnter"},
 		ft = {"go", 'gomod'},
 		build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
-    }, 
+        }, 
 	{
 		-- autocompletion
 		"hrsh7th/nvim-cmp", -- completion plugin
+        "hrsh7th/cmp-nvim-lsp", -- completion powered by language server protocal
+        "hrsh7th/cmp-cmdline",
 		"hrsh7th/cmp-buffer", -- source for text in buffer
 		"hrsh7th/cmp-path", -- source for file system paths
-		-- snippets
+	   	-- snippets
 		"L3MON4D3/LuaSnip", -- snippet engine
 		"saadparwaiz1/cmp_luasnip", -- for autocompletion
 		"rafamadriz/friendly-snippets", -- useful snippets
-	},
+	    },
 	-- { "neoclide/coc.nvim", },
-
+    -- A powerful autopair plugin for Neovim that supports multiple characters.   
+    {
+        "windwp/nvim-autopairs",
+        event = "InsertEnter",
+        opts = {} -- this is equalent to setup({}) function
+        }
 })
 
--- gruvbox setup
+-- colorscheme gruvbox & monokai setup
 vim.o.background = "dark" -- or "light" for light mode
 vim.cmd([[colorscheme gruvbox]])
+-- vim.cmd([[colorscheme monokai]])
 
 -- neovim tree setup
 require("nvim-tree").setup({
